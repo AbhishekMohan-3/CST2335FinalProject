@@ -21,18 +21,32 @@ import com.google.android.material.snackbar.Snackbar;
 public class Covid19FrontPage extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
+    String searchItem ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_covid19_front_page);
+        sharedpreferences = getSharedPreferences("CovidPref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        EditText searchBar = (EditText) findViewById(R.id.searchBar);
+
+        String searchItem = searchBar.getText().toString();
+        searchItem = sharedpreferences.getString("searchedItem", "2222");
+        editor.putString("searchedItem", searchItem);
+        editor.apply();
+        searchBar.setText(searchItem);
+
+
 
         Button searchIcon = findViewById(R.id.searchIcon);
         searchIcon.setOnClickListener(v -> {
 
             Context context = getApplicationContext();
             Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT).show();
-            setdata();
+
+
+
         });
         Button snackBar = findViewById(R.id.snkBar);
         snackBar.setOnClickListener(clk -> {
@@ -40,12 +54,13 @@ public class Covid19FrontPage extends AppCompatActivity {
             builder.setMessage("Do you want to implement more functions?")
                     .setTitle("Question:")
                     .setNegativeButton("No", ((dialog, cl) -> {
+                        searchBar.setText("GM");
                     }))
                     .setPositiveButton("Yes", (dialog, cl) -> {
                         Snackbar.make(searchIcon, "Message", Snackbar.LENGTH_SHORT)
                                 .setAction("hey", click -> {
-                                 EditText searchBar = findViewById(R.id.searchBar);
-                                 searchBar.setText("Yes we will!");
+
+                                 //searchBar.setText("Yes we will!");
                                 })
                                 .show();
                     })
@@ -55,26 +70,13 @@ public class Covid19FrontPage extends AppCompatActivity {
 
 
 
-    private int setdata() {
-
-        sharedpreferences = getSharedPreferences("CarChargingPref", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        EditText searchBar = (EditText) findViewById(R.id.searchBar);
-        String searchedItem = searchBar.getText().toString();
 
 
-       // if (TextUtils.isEmpty(searchedItem)) {
-            searchedItem = sharedpreferences.getString("searchedItem", "2222");
 
-        //} else {
-            editor.putString("searchedItem", searchedItem);
 
-        //}
-            editor.apply();
 
-            searchBar.setText(searchedItem);
 
-            return 1;
-        }
+
+
     }
 
