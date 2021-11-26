@@ -31,20 +31,20 @@ public class Covid19FrontPage extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedpreferences.edit();
         EditText searchBar = (EditText) findViewById(R.id.searchBar);
 
-        String searchItem = searchBar.getText().toString();
+
         searchItem = sharedpreferences.getString("searchedItem", "2222");
-        editor.putString("searchedItem", searchItem);
-        editor.apply();
+
         searchBar.setText(searchItem);
 
 
 
         Button searchIcon = findViewById(R.id.searchIcon);
         searchIcon.setOnClickListener(v -> {
-
+            searchItem = searchBar.getText().toString();
             Context context = getApplicationContext();
             Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT).show();
-
+            editor.putString("searchedItem", searchItem);
+            editor.apply();
 
 
         });
