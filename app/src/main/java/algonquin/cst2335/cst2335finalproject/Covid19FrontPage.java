@@ -1,40 +1,28 @@
 package algonquin.cst2335.cst2335finalproject;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -58,16 +46,9 @@ public class Covid19FrontPage extends AppCompatActivity {
     private String stringURL;
     ArrayList<CovidInfo> myCovidInfo = new ArrayList<>();
     MyCovidAdapter adt;
-
-
     AlertDialog loadDialogue;
     Button snkBr;
-    String gainedDate = null;
-    int gainedCase =  0;
-    int gainedRec = 0;
-    int gainedHos =  0;
-    int gainedFat = 0;
-    int gainedVac = 0;
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -94,8 +75,17 @@ public class Covid19FrontPage extends AppCompatActivity {
             editor.putString("searchedItem", searchItem);
             editor.apply();
 
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Fetching the data after: ")
+                    .setMessage(searchItem)
+                    .setView( new ProgressBar(this))
+                    .show();
+
             Executor newThread = Executors.newSingleThreadExecutor();
             newThread.execute( () -> {
+
+
+
 
                 try {
                     String cityName = searchBar.getText().toString();
@@ -133,6 +123,7 @@ public class Covid19FrontPage extends AppCompatActivity {
 
                            // adt.notifyItemInserted(myCovidInfo.size()-1);
                             adt.notifyDataSetChanged();
+                            dialog.hide();
                         });
 
 
@@ -194,11 +185,11 @@ public class Covid19FrontPage extends AppCompatActivity {
         public CovidRowViews( View itemView) {
             super(itemView);
             dateData = itemView.findViewById(R.id.dateData);
-            casesData = itemView.findViewById(R.id.casesData);
-            fatalitiesData = itemView.findViewById(R.id.fatalitiesData);
-            hospitalData = itemView.findViewById(R.id.hospitalData);
             vaccinationData = itemView.findViewById(R.id.vaccinationData);
-            recoveryData = itemView.findViewById(R.id.recoveryData);
+            fatalitiesData = itemView.findViewById(R.id.fatalitiesData);
+             recoveryData = itemView.findViewById(R.id.recoveryData);
+            hospitalData = itemView.findViewById(R.id.hospitalizationData);
+            casesData = itemView.findViewById(R.id.caseData);
         }
         public void setPosition(int p) {
             position = p;
@@ -224,13 +215,21 @@ public class Covid19FrontPage extends AppCompatActivity {
         public void onBindViewHolder(CovidRowViews holder, int position) {
 
             runOnUiThread(() ->{
-            holder.dateData.setText(myCovidInfo.get(position).getSearchedDate());
-            holder.casesData.setText(String.valueOf(myCovidInfo.get(position).getTotalCases()));
-            holder.vaccinationData.setText(String.valueOf(myCovidInfo.get(position).getTotalVaccinations()));
-            holder.fatalitiesData.setText(String.valueOf(myCovidInfo.get(position).getTotalFatalities()));
-            holder.recoveryData.setText(String.valueOf(myCovidInfo.get(position).getTotalRecoveries()));
-            holder.hospitalData.setText(String.valueOf(myCovidInfo.get(position).getTotalHospitalization()));
-            holder.setPosition(position);
+            /*holder.dateData.setText("Date: " + myCovidInfo.get(position).getSearchedDate());
+            holder.casesData.setText("Total Cases: " + String.valueOf(myCovidInfo.get(position).getTotalCases()));
+            holder.fatalitiesData.setText("Total Fatalities: " + String.valueOf(myCovidInfo.get(position).getTotalFatalities()));
+            holder.hospitalData.setText("Total Hospitalizations: " +  String.valueOf(myCovidInfo.get(position).getTotalHospitalization()));
+            holder.vaccinationData.setText("Total Vaccinations: " +String.valueOf(myCovidInfo.get(position).getTotalVaccinations()));
+            holder.recoveryData.setText("Total Recoveries: " +String.valueOf(myCovidInfo.get(position).getTotalRecoveries()));
+            holder.setPosition(position);*/
+                holder.dateData.setText("Date:" + myCovidInfo.get(position).getSearchedDate());
+                holder.casesData.setText("Total Cases:" + String.valueOf(myCovidInfo.get(position).getTotalCases()));
+                holder.vaccinationData.setText("Total Vaccinations:" +String.valueOf(myCovidInfo.get(position).getTotalVaccinations()));
+                holder.fatalitiesData.setText("Total Fatalities:" +String.valueOf(myCovidInfo.get(position).getTotalFatalities()));
+                holder.recoveryData.setText("Total Recoveries:" +String.valueOf(myCovidInfo.get(position).getTotalRecoveries()));
+                holder.hospitalData.setText("Total Hospitalizations:" +String.valueOf(myCovidInfo.get(position).getTotalHospitalization()));
+                holder.setPosition(position);
+
             });
 
         }

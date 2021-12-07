@@ -18,42 +18,42 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/casesData"
-        android:layout_width="136dp"
-        android:layout_height="26dp"
-        android:text="Cases goes here"
+        android:id="@+id/vaccinationData"
+        android:layout_width="222dp"
+        android:layout_height="20dp"
+        android:text="Vaccinations goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hospitalizationData" />
+
+    <TextView
+        android:id="@+id/fatalitiesData"
+        android:layout_width="170dp"
+        android:layout_height="20dp"
+        android:text="Fatalities goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/caseData" />
+
+    <TextView
+        android:id="@+id/recoveryData"
+        android:layout_width="170dp"
+        android:layout_height="20dp"
+        android:text="Recoveries goes here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vaccinationData" />
 
     <TextView
-        android:id="@+id/fatalitiesData"
-        android:layout_width="147dp"
-        android:layout_height="27dp"
-        android:text="Fatalities goes here"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recoveryData" />
-
-    <TextView
-        android:id="@+id/hospitalData"
-        android:layout_width="173dp"
-        android:layout_height="19dp"
-        android:text="Hospitalization goes here"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/casesData" />
-
-    <TextView
-        android:id="@+id/vaccinationData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vaccination goes here"
+        android:id="@+id/hospitalizationData"
+        android:layout_width="222dp"
+        android:layout_height="20dp"
+        android:text="Hospitalizations goes here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fatalitiesData" />
 
     <TextView
-        android:id="@+id/recoveryData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recoveries goes here"
+        android:id="@+id/caseData"
+        android:layout_width="170dp"
+        android:layout_height="20dp"
+        android:text="Cases goes here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateData" />
 
