@@ -1,51 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/dateData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dp"
-            />
-        <TextView
-            android:id="@+id/casesData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:id="@+id/fatalitiesData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:id="@+id/hospitalData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:id="@+id/vaccinationData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <TextView
-            android:id="@+id/recoveryData"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            /><TextView
-        android:id="@+id/messageData"
+
+    <TextView
+        android:id="@+id/dateData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        />
+        android:text="Date goes here"
+        android:textSize="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/casesData"
+        android:layout_width="136dp"
+        android:layout_height="26dp"
+        android:text="Cases goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/vaccinationData" />
 
-</androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/fatalitiesData"
+        android:layout_width="147dp"
+        android:layout_height="27dp"
+        android:text="Fatalities goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recoveryData" />
+
+    <TextView
+        android:id="@+id/hospitalData"
+        android:layout_width="173dp"
+        android:layout_height="19dp"
+        android:text="Hospitalization goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/casesData" />
+
+    <TextView
+        android:id="@+id/vaccinationData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vaccination goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fatalitiesData" />
+
+    <TextView
+        android:id="@+id/recoveryData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recoveries goes here"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateData" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

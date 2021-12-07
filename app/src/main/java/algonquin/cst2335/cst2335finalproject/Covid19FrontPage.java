@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -22,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -51,31 +56,47 @@ public class Covid19FrontPage extends AppCompatActivity {
     String searchItem ;
     RecyclerView covidRecycleView;
     private String stringURL;
-    private String iconName;
-    Bitmap image = null;
-    ArrayList<CovidInfo> myCovidInfo;
+    ArrayList<CovidInfo> myCovidInfo = new ArrayList<>();
+    MyCovidAdapter adt;
 
+
+    AlertDialog loadDialogue;
+    Button snkBr;
+    String gainedDate = null;
+    int gainedCase =  0;
+    int gainedRec = 0;
+    int gainedHos =  0;
+    int gainedFat = 0;
+    int gainedVac = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_covid19_front_page);
+
+
+
+
         sharedpreferences = getSharedPreferences("CovidPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         EditText searchBar = (EditText) findViewById(R.id.searchBar);
         covidRecycleView = findViewById(R.id.covidRecycleView);
-        Button snkBr = findViewById(R.id.snkBar);
-        myCovidInfo = new ArrayList<>();
+        adt = new MyCovidAdapter();
+
+        covidRecycleView.setAdapter(adt);
+        covidRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        snkBr = findViewById(R.id.snkBar);
         snkBr.setOnClickListener(clk -> {
             searchItem = searchBar.getText().toString();
             Context context = getApplicationContext();
             Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT).show();
             editor.putString("searchedItem", searchItem);
             editor.apply();
-            Executor newThread = Executors.newSingleThreadExecutor();
 
+            Executor newThread = Executors.newSingleThreadExecutor();
             newThread.execute( () -> {
+
                 try {
                     String cityName = searchBar.getText().toString();
                     stringURL = "https://api.covid19tracker.ca/reports?after="
@@ -92,6 +113,7 @@ public class Covid19FrontPage extends AppCompatActivity {
                     JSONObject theDocument = new JSONObject(text);
                     //   JSONArray theArray = new JSONArray(text);
                     JSONArray covidArray = theDocument.getJSONArray("data");
+                    myCovidInfo.clear();
 
                     for (int i = 0; i < covidArray.length(); i++) {
 
@@ -103,67 +125,28 @@ public class Covid19FrontPage extends AppCompatActivity {
                         int totalRecoveries = objAtI.getInt("total_recoveries");
                         int totalFatalities = objAtI.getInt("total_fatalities");
                         int totalCases = objAtI.getInt("total_cases");
+                        int totalHospital = objAtI.getInt("total_hospitalizations");
                         String daydate = objAtI.getString("date");
-                        myCovidInfo.add(new CovidInfo(daydate,totalCases,totalFatalities,totalVaccinations,totalRecoveries));
+                        CovidInfo thisInfo = new CovidInfo(daydate,totalCases,totalFatalities,totalVaccinations,totalRecoveries,totalHospital);
+                        myCovidInfo.add(thisInfo);
+                        runOnUiThread(() ->{
+
+                           // adt.notifyItemInserted(myCovidInfo.size()-1);
+                            adt.notifyDataSetChanged();
+                        });
 
 
-
-
-
-                    /*     File file = new File(getFilesDir(),iconName +".png");
-                         if(file.exists()){
-                             image = BitmapFactory.decodeFile(getFilesDir()+"/"+ iconName +".png");
-                         }else{
-                    URL imgUrl = new URL( "https://openweathermap.org/img/w/" + iconName + ".png" );
-                    HttpURLConnection connection = (HttpURLConnection) imgUrl.openConnection();
-                    connection.connect();
-                    int responseCode = connection.getResponseCode();
-                    if (responseCode == 200) {
-                        image = BitmapFactory.decodeStream(connection.getInputStream());
                     }
-                    FileOutputStream fOut = null;
-                    try {
-                        fOut = openFileOutput( iconName + ".png", Context.MODE_PRIVATE);
-                        image.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-                        fOut.flush();
-                        fOut.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-
-                    }}
-                        runOnUiThread(() -> {
-
-                            TextView tv = findViewById(R.id.temp);
-                            tv.setText("The current temperature is " + current);
-                            tv.setVisibility(View.VISIBLE);
-                            tv = findViewById(R.id.minTemp);
-                            tv.setText("The maximum temperature is " + max);
-                            tv.setVisibility(View.VISIBLE);
-                            tv = findViewById(R.id.maxTemp);
-                            tv.setText("The min temperature is " + min);
-                            tv.setVisibility(View.VISIBLE);
-                            tv = findViewById(R.id.humidity);
-                            tv.setText("The humidity is " + humidity);
-                            tv.setVisibility(View.VISIBLE);
-                            tv = findViewById(R.id.description);
-                            tv.setText("Description: " + description);
-                            tv.setVisibility(View.VISIBLE);
-
-
-                        });*/
-                    }
-
 
                 }
                 catch (IOException | JSONException ioe){
                     Log.e("Connection Error", ioe.getMessage());
                 }
-
-
             } );
 
-
         });
+
+
         searchItem = sharedpreferences.getString("searchedItem", "2222");
         searchBar.setText(searchItem);
         Button searchIcon = findViewById(R.id.searchIcon);
@@ -198,6 +181,71 @@ public class Covid19FrontPage extends AppCompatActivity {
     }
 
 
+
+    private class CovidRowViews extends RecyclerView.ViewHolder{
+
+        TextView dateData;
+        TextView casesData;
+        TextView fatalitiesData;
+        TextView hospitalData;
+        TextView vaccinationData;
+        TextView recoveryData;
+        int position = 0;
+        public CovidRowViews( View itemView) {
+            super(itemView);
+            dateData = itemView.findViewById(R.id.dateData);
+            casesData = itemView.findViewById(R.id.casesData);
+            fatalitiesData = itemView.findViewById(R.id.fatalitiesData);
+            hospitalData = itemView.findViewById(R.id.hospitalData);
+            vaccinationData = itemView.findViewById(R.id.vaccinationData);
+            recoveryData = itemView.findViewById(R.id.recoveryData);
+        }
+        public void setPosition(int p) {
+            position = p;
+        }
+    }
+
+
+
+
+    public class MyCovidAdapter extends RecyclerView.Adapter<CovidRowViews>{
+
+
+
+
+        @Override
+        public CovidRowViews onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater inflater = getLayoutInflater();
+            View loadedRow = inflater.inflate(R.layout.covid_searched_item, parent, false);
+
+            return new CovidRowViews(loadedRow);
+        }
+        @Override
+        public void onBindViewHolder(CovidRowViews holder, int position) {
+
+            runOnUiThread(() ->{
+            holder.dateData.setText(myCovidInfo.get(position).getSearchedDate());
+            holder.casesData.setText(String.valueOf(myCovidInfo.get(position).getTotalCases()));
+            holder.vaccinationData.setText(String.valueOf(myCovidInfo.get(position).getTotalVaccinations()));
+            holder.fatalitiesData.setText(String.valueOf(myCovidInfo.get(position).getTotalFatalities()));
+            holder.recoveryData.setText(String.valueOf(myCovidInfo.get(position).getTotalRecoveries()));
+            holder.hospitalData.setText(String.valueOf(myCovidInfo.get(position).getTotalHospitalization()));
+            holder.setPosition(position);
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return myCovidInfo.size();
+        }
+        public int getItemViewType(int position) {
+            CovidInfo thisRow = myCovidInfo.get(position);
+            return super.getItemViewType(position);
+        }
+    }
+
+
     private class CovidInfo{
 
 
@@ -207,8 +255,9 @@ public class Covid19FrontPage extends AppCompatActivity {
 
         int totalVaccinations;
         int totalRecoveries;
+        int totalHospitalization;
 
-        public CovidInfo(String searchedDate ,int totalCases, int totalFatalities, int totalVaccinations, int totalRecoveries) {
+        public CovidInfo(String searchedDate ,int totalCases, int totalFatalities, int totalVaccinations, int totalRecoveries,int totalHospitalization) {
 
             this.searchedDate = searchedDate;
             this.totalCases = totalCases;
@@ -216,6 +265,7 @@ public class Covid19FrontPage extends AppCompatActivity {
 
             this.totalVaccinations = totalVaccinations;
             this.totalRecoveries = totalRecoveries;
+            this.totalHospitalization = totalHospitalization;
         }
 
         public String getSearchedDate() {
@@ -237,6 +287,10 @@ public class Covid19FrontPage extends AppCompatActivity {
         public int getTotalRecoveries() {
             return totalRecoveries;
         }
+
+        public int getTotalHospitalization(){
+            return totalHospitalization;
+        }
     }
 
 
@@ -253,5 +307,5 @@ public class Covid19FrontPage extends AppCompatActivity {
 
 
 
-    }
+}
 
