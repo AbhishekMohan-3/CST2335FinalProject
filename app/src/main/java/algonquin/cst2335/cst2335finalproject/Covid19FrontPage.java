@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -355,9 +356,18 @@ public class Covid19FrontPage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.goTo_OwlBot:
+                Intent owlBotPage = new Intent( Covid19FrontPage.this, MainActivity.class);
+                startActivity(owlBotPage);
                 break;
             case R.id.gotTo_Carbon:
+               /* Intent carbonPage = new Intent( Covid19FrontPage.this, MainActivity.class);
+                startActivity(carbonPage);*/
                 break;
+            case R.id.helpMenu:
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle("Instructions: ")
+                        .setMessage("Type the date you want to enter in the given format and press search button.\n List will be loaded. Click on any record to save.\n If you want to undo save, press undo saving. ")
+                        .show();
 
         }
         return super.onOptionsItemSelected(item);
