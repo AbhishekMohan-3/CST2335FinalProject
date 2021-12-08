@@ -48,6 +48,16 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+/**
+ *This class represents the first page of Covid19 Information Tracker.
+ * It includes loading data from URl and showing it in a recyclerView, as well as allowing
+ * users to save a particular record and delete it as well.
+ * @author Abhishek Mohan
+ * @version 1.0
+ *
+ *
+ */
+
 public class Covid19FrontPage extends AppCompatActivity {
 
     SharedPreferences sharedpreferences;
@@ -57,13 +67,16 @@ public class Covid19FrontPage extends AppCompatActivity {
     ArrayList<CovidInfo> myCovidInfo = new ArrayList<>();
     MyCovidAdapter adt;
     AlertDialog loadDialogue;
-    Button snkBr;
+    Button searchButton;
     SQLiteDatabase db;
 
 
 
 
     @Override
+    /**
+     * this function is initializing the toolbar
+     */
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_activity_actions, menu);
@@ -77,39 +90,50 @@ public class Covid19FrontPage extends AppCompatActivity {
         setContentView(R.layout.activity_covid19_front_page);
         Toolbar myToolbar = findViewById(R.id.toolBar);
         setSupportActionBar(myToolbar);
-
+        /**
+         *shared preferences to store the last search of the user
+         */
         sharedpreferences = getSharedPreferences("CovidPref", Context.MODE_PRIVATE);
+        /**
+         * Setting up edittext,recyclerView, and using the adapter object on recyclerView
+         */
         SharedPreferences.Editor editor = sharedpreferences.edit();
         EditText searchBar = (EditText) findViewById(R.id.searchBar);
         covidRecycleView = findViewById(R.id.covidRecycleView);
         adt = new MyCovidAdapter();
         covidRecycleView.setAdapter(adt);
         covidRecycleView.setLayoutManager(new LinearLayoutManager(this));
-
+        /** creating a database object to store the data*/
         MyCovidHelper opener = new MyCovidHelper( this );
         db =opener.getWritableDatabase();
 
-
-        snkBr = findViewById(R.id.snkBar);
-        snkBr.setOnClickListener(clk -> {
+        /** creating onclickListenere on searchButton*/
+        searchButton = findViewById(R.id.snkBar);
+       searchButton.setOnClickListener(clk -> {
+           /**getting the date searched by user */
             searchItem = searchBar.getText().toString();
             Context context = getApplicationContext();
-            Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT).show();
+           /**Toast message to show "please wait" message */
+            Toast.makeText(context, "Please wait while data is loading", Toast.LENGTH_SHORT).show();
+           /** Editor for shared Preferences*/
             editor.putString("searchedItem", searchItem);
             editor.apply();
-
+           /**AlertDialog to show that data is being fetched */
             AlertDialog dialog = new AlertDialog.Builder(this)
                     .setTitle("Fetching the data after: ")
                     .setMessage(searchItem)
                     .setView( new ProgressBar(this))
                     .show();
-
+           /**Using executor to retrieve data from URl */
             Executor newThread = Executors.newSingleThreadExecutor();
             newThread.execute( () -> {
 
 
 
-
+                /** Below code is using date searched to grab the data related to that date.
+                 *
+                 * It consisted to creating JSON Object, and getting data from it's fields.
+                 * Then JSON array  is storing the data of all the found records*/
                 try {
                     String cityName = searchBar.getText().toString();
                     stringURL = "https://api.covid19tracker.ca/reports?after="
@@ -127,7 +151,8 @@ public class Covid19FrontPage extends AppCompatActivity {
                     //   JSONArray theArray = new JSONArray(text);
                     JSONArray covidArray = theDocument.getJSONArray("data");
                     myCovidInfo.clear();
-
+                    /** for loop is used to store the information in variables
+                     * and all the data is stored in the arrayList*/
                     for (int i = 0; i < covidArray.length(); i++) {
 
                         String name = theDocument.getString("province");
@@ -143,16 +168,18 @@ public class Covid19FrontPage extends AppCompatActivity {
                         CovidInfo thisInfo = new CovidInfo(daydate,totalCases,totalFatalities,totalVaccinations,totalRecoveries,totalHospital);
                         myCovidInfo.add(thisInfo);
                         runOnUiThread(() ->{
-
+                            /** data loaded and adapter is notified of all the changes*/
                            // adt.notifyItemInserted(myCovidInfo.size()-1);
                             adt.notifyDataSetChanged();
                             dialog.hide();
+
                         });
 
 
                     }
 
                 }
+                /**Try catch block for detecting JSON or IO exceptions*/
                 catch (IOException | JSONException ioe){
                     Log.e("Connection Error", ioe.getMessage());
                 }
@@ -160,7 +187,7 @@ public class Covid19FrontPage extends AppCompatActivity {
 
         });
 
-
+        /**Shared preferences*/
         searchItem = sharedpreferences.getString("searchedItem", "2222");
         searchBar.setText(searchItem);
         Button searchIcon = findViewById(R.id.searchIcon);
@@ -195,9 +222,14 @@ public class Covid19FrontPage extends AppCompatActivity {
     }
 
 
+    /**
+     *
+     * This class is used to create the view of a row in the recyclerView
+     * It extends RecyclerView.ViewHolder
+     */
 
     private class CovidRowViews extends RecyclerView.ViewHolder{
-
+        /**TextViews of the row to be displayed*/
         TextView dateData;
         TextView casesData;
         TextView fatalitiesData;
@@ -207,13 +239,15 @@ public class Covid19FrontPage extends AppCompatActivity {
         int position = 0;
         public CovidRowViews( View itemView) {
             super(itemView);
+            /**initializing textViews*/
             dateData = itemView.findViewById(R.id.dateData);
             vaccinationData = itemView.findViewById(R.id.vaccinationData);
             fatalitiesData = itemView.findViewById(R.id.fatalitiesData);
              recoveryData = itemView.findViewById(R.id.recoveryData);
             hospitalData = itemView.findViewById(R.id.hospitalizationData);
             casesData = itemView.findViewById(R.id.caseData);
-
+            /**When user click on a row, it asks using alterDialog if he or she wants to dave the record
+             * If yes, the record is saved in the database. */
             itemView.setOnClickListener(click->{
                 AlertDialog.Builder builder = new AlertDialog.Builder( Covid19FrontPage.this);
                 builder.setMessage("Do you want to save data for the date: " + dateData.getText())
@@ -222,6 +256,7 @@ public class Covid19FrontPage extends AppCompatActivity {
                         }))
                         .setPositiveButton("Yes",((dialog, cl) -> {
                   //  CovidInfo = new CovidInfo(dateData.getText(),casesData.getText(),fatalitiesData.getText(),hospitalData.getText(),vaccinationData.getText(),recoveryData.getText());
+                            /**Getting data of record to be saved and inserting it in the database*/
                             ContentValues savingRow = new ContentValues();
                             savingRow.put(MyCovidHelper.col_date, (String) dateData.getText());
                             savingRow.put(MyCovidHelper.col_cases, (String) casesData.getText());
@@ -231,7 +266,7 @@ public class Covid19FrontPage extends AppCompatActivity {
                             savingRow.put(MyCovidHelper.col_recoveries, (String) recoveryData.getText());
                             db.insert(MyCovidHelper.TABLE_NAME,MyCovidHelper.col_cases,savingRow);
 
-
+                            /**Informing user that data is saved and to undo saving, click "Undo Saving"*/
                             Snackbar.make(dateData,"Data saved", Snackbar.LENGTH_LONG)
                                     .setAction("Undo saving", clk->{
                                         CovidInfo removedDate =myCovidInfo.get(position);
@@ -252,13 +287,19 @@ public class Covid19FrontPage extends AppCompatActivity {
 
 
 
-
+    /**Adapter Class to be used to display data in recyclerView*/
     public class MyCovidAdapter extends RecyclerView.Adapter<CovidRowViews>{
 
 
 
 
         @Override
+        /**
+         *Creates the view for row
+         * @param parent: it is the ViewGroup
+         * @viewType: used to chose the viewType which is same this time
+         * @return Returns the view.
+         */
         public CovidRowViews onCreateViewHolder(ViewGroup parent, int viewType) {
             LayoutInflater inflater = getLayoutInflater();
             View loadedRow = inflater.inflate(R.layout.covid_searched_item, parent, false);
@@ -266,6 +307,12 @@ public class Covid19FrontPage extends AppCompatActivity {
             return new CovidRowViews(loadedRow);
         }
         @Override
+        /**
+         * sets the data in the edit texts of rows
+         * @param holder: the holder object
+         * @param position : represents the position of the row
+         * @return Returns void
+         * */
         public void onBindViewHolder(CovidRowViews holder, int position) {
 
             runOnUiThread(() ->{
@@ -289,6 +336,8 @@ public class Covid19FrontPage extends AppCompatActivity {
         }
 
         @Override
+        /**It gets the count of items
+         * @return size of array*/
         public int getItemCount() {
             return myCovidInfo.size();
         }
@@ -298,7 +347,8 @@ public class Covid19FrontPage extends AppCompatActivity {
         }
     }
 
-
+    /**CovidInfo class which represents a CovidInfo object that stores the data obtained from
+     * the date. It represents the data and its related data*/
     private class CovidInfo{
 
 
@@ -312,6 +362,16 @@ public class Covid19FrontPage extends AppCompatActivity {
         long id;
         public void setId(long l){ id = l;}
         public long getId(){return id;}
+        /**
+         * Returns the CovidInfo object
+         * @param searchedDate: the date of the record
+         * @param totalCases: total cases of the record
+         * @param totalFatalities: total fatalities in the record
+         * @param totalHospitalization: total hospitalizations in  the record
+         * @param totalRecoveries: total recoveries in the record
+         * @param totalVaccinations: total vaccinations in the record
+         *
+         * */
 
         public CovidInfo(String searchedDate ,int totalCases, int totalFatalities, int totalVaccinations, int totalRecoveries,int totalHospitalization) {
 
@@ -323,7 +383,7 @@ public class Covid19FrontPage extends AppCompatActivity {
             this.totalRecoveries = totalRecoveries;
             this.totalHospitalization = totalHospitalization;
         }
-
+        /**Getters and setters*/
         public String getSearchedDate() {
             return searchedDate;
         }
