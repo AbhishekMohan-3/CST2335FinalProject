@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +52,7 @@ public class Covid19FrontPage extends AppCompatActivity {
     MyCovidAdapter adt;
     AlertDialog loadDialogue;
     Button snkBr;
+    SQLiteDatabase db;
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -59,16 +62,18 @@ public class Covid19FrontPage extends AppCompatActivity {
         setContentView(R.layout.activity_covid19_front_page);
 
 
-
-
         sharedpreferences = getSharedPreferences("CovidPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         EditText searchBar = (EditText) findViewById(R.id.searchBar);
         covidRecycleView = findViewById(R.id.covidRecycleView);
         adt = new MyCovidAdapter();
-
         covidRecycleView.setAdapter(adt);
         covidRecycleView.setLayoutManager(new LinearLayoutManager(this));
+
+        MyCovidHelper opener = new MyCovidHelper( this );
+        db =opener.getWritableDatabase();
+
+
         snkBr = findViewById(R.id.snkBar);
         snkBr.setOnClickListener(clk -> {
             searchItem = searchBar.getText().toString();
@@ -200,8 +205,24 @@ public class Covid19FrontPage extends AppCompatActivity {
                         .setNegativeButton("No", ((dialog, cl) -> {
                         }))
                         .setPositiveButton("Yes",((dialog, cl) -> {
+                  //  CovidInfo = new CovidInfo(dateData.getText(),casesData.getText(),fatalitiesData.getText(),hospitalData.getText(),vaccinationData.getText(),recoveryData.getText());
+                            ContentValues savingRow = new ContentValues();
+                            savingRow.put(MyCovidHelper.col_date, (String) dateData.getText());
+                            savingRow.put(MyCovidHelper.col_cases, (String) casesData.getText());
+                            savingRow.put(MyCovidHelper.col_fatalities, (String) fatalitiesData.getText());
+                            savingRow.put(MyCovidHelper.col_hospitalizations, (String) hospitalData.getText());
+                            savingRow.put(MyCovidHelper.col_vaccinations, (String) vaccinationData.getText());
+                            savingRow.put(MyCovidHelper.col_recoveries, (String) recoveryData.getText());
+                            db.insert(MyCovidHelper.TABLE_NAME,MyCovidHelper.col_cases,savingRow);
+
+
                             Snackbar.make(dateData,"Data saved", Snackbar.LENGTH_LONG)
-                                    .setAction("Undo saving", clk->{}).show();
+                                    .setAction("Undo saving", clk->{
+                                        CovidInfo removedDate =myCovidInfo.get(position);
+                                        db.delete(MyCovidHelper.TABLE_NAME,"Date=?",new String[]{(String) dateData.getText()} );
+
+
+                                    }).show();
 
                         })).create().show();
 
@@ -272,6 +293,9 @@ public class Covid19FrontPage extends AppCompatActivity {
         int totalVaccinations;
         int totalRecoveries;
         int totalHospitalization;
+        long id;
+        public void setId(long l){ id = l;}
+        public long getId(){return id;}
 
         public CovidInfo(String searchedDate ,int totalCases, int totalFatalities, int totalVaccinations, int totalRecoveries,int totalHospitalization) {
 
