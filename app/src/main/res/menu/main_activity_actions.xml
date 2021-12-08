@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/authorInfo"
+        android:icon="@drawable/authorinfo"
+        android:title="Author Info"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/gotTo_Carbon"
+        android:icon="@drawable/carbon"
+        android:title="Carbon Tracker"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/goTo_OwlBot"
+        android:icon="@drawable/owlbot"
+        android:title="OwlBot"
+        android:visible="true"
+        app:showAsAction="always" />
+</menu>

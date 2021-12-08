@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/user/AndroidStudioProjects/CST2335FinalProject/app/src/main/res/layout/activity_covid19_front_page.xml" value="0.2828054298642534" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/CST2335FinalProject/app/src/main/res/layout/activity_covid19_front_page.xml" value="0.264" />
         <entry key="..\:/Users/user/AndroidStudioProjects/CST2335FinalProject/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/user/AndroidStudioProjects/CST2335FinalProject/app/src/main/res/layout/covid_searched_item.xml" value="0.72" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/CST2335FinalProject/app/src/main/res/layout/empty_layout.xml" value="0.15896739130434784" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/CST2335FinalProject/app/src/main/res/menu/main_activity_actions.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

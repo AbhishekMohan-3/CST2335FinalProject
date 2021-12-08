@@ -1,8 +1,10 @@
 package algonquin.cst2335.cst2335finalproject;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +16,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,12 +60,22 @@ public class Covid19FrontPage extends AppCompatActivity {
     SQLiteDatabase db;
 
 
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_actions, menu);
+        return true;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_covid19_front_page);
-
+        Toolbar myToolbar = findViewById(R.id.toolBar);
+        setSupportActionBar(myToolbar);
 
         sharedpreferences = getSharedPreferences("CovidPref", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -337,7 +352,16 @@ public class Covid19FrontPage extends AppCompatActivity {
 
 
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.goTo_OwlBot:
+                break;
+            case R.id.gotTo_Carbon:
+                break;
 
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
