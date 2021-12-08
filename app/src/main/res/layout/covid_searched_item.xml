@@ -10,8 +10,8 @@
 
     <TextView
         android:id="@+id/dateData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="164dp"
+        android:layout_height="30dp"
         android:text="Date goes here"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +47,8 @@
         android:layout_height="20dp"
         android:text="Hospitalizations goes here"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fatalitiesData" />
+        app:layout_constraintTop_toBottomOf="@+id/fatalitiesData"
+       />
 
     <TextView
         android:id="@+id/caseData"
@@ -56,6 +57,14 @@
         android:text="Cases goes here"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateData" />
+
+    <TextView
+        android:id="@+id/emptyLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recoveryData" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

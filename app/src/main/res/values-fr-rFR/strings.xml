@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Traqueur d\'informations sur le Covid19</string>
+    <string name="srchBtn">chercher</string>
+    <string name="snackBar">snack-bar</string>
+</resources>

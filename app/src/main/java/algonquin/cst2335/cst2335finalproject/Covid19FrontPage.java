@@ -236,6 +236,7 @@ public class Covid19FrontPage extends AppCompatActivity {
         TextView hospitalData;
         TextView vaccinationData;
         TextView recoveryData;
+        TextView emptyLine;
         int position = 0;
         public CovidRowViews( View itemView) {
             super(itemView);
@@ -246,6 +247,7 @@ public class Covid19FrontPage extends AppCompatActivity {
              recoveryData = itemView.findViewById(R.id.recoveryData);
             hospitalData = itemView.findViewById(R.id.hospitalizationData);
             casesData = itemView.findViewById(R.id.caseData);
+            emptyLine = itemView.findViewById(R.id.emptyLine);
             /**When user click on a row, it asks using alterDialog if he or she wants to dave the record
              * If yes, the record is saved in the database. */
             itemView.setOnClickListener(click->{
@@ -253,6 +255,8 @@ public class Covid19FrontPage extends AppCompatActivity {
                 builder.setMessage("Do you want to save data for the date: " + dateData.getText())
                         .setTitle("Question: ")
                         .setNegativeButton("No", ((dialog, cl) -> {
+                            CovidInfo removedDate =myCovidInfo.get(position);
+                            db.delete(MyCovidHelper.TABLE_NAME,"Date=?",new String[]{(String) dateData.getText()} );
                         }))
                         .setPositiveButton("Yes",((dialog, cl) -> {
                   //  CovidInfo = new CovidInfo(dateData.getText(),casesData.getText(),fatalitiesData.getText(),hospitalData.getText(),vaccinationData.getText(),recoveryData.getText());
@@ -329,7 +333,9 @@ public class Covid19FrontPage extends AppCompatActivity {
                 holder.fatalitiesData.setText("Total Fatalities:" +String.valueOf(myCovidInfo.get(position).getTotalFatalities()));
                 holder.recoveryData.setText("Total Recoveries:" +String.valueOf(myCovidInfo.get(position).getTotalRecoveries()));
                 holder.hospitalData.setText("Total Hospitalizations:" +String.valueOf(myCovidInfo.get(position).getTotalHospitalization()));
+                holder.emptyLine.setText("");
                 holder.setPosition(position);
+
 
             });
 
@@ -426,7 +432,11 @@ public class Covid19FrontPage extends AppCompatActivity {
             case R.id.helpMenu:
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("Instructions: ")
-                        .setMessage("Type the date you want to enter in the given format and press search button.\n List will be loaded. Click on any record to save.\n If you want to undo save, press undo saving. ")
+                        .setMessage("Type the date you want to enter in the given format and press search button." +
+                                "\n List will be loaded. Click on any record to save.\n " +
+                                "If you want to instantly undo save, press undo saving.\n" +
+                                " If you want to delete the saved record later, simple click it again from the list, " +
+                                "and click no when asked to save the record")
                         .show();
 
         }
