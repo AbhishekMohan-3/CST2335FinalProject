@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -190,6 +192,21 @@ public class Covid19FrontPage extends AppCompatActivity {
              recoveryData = itemView.findViewById(R.id.recoveryData);
             hospitalData = itemView.findViewById(R.id.hospitalizationData);
             casesData = itemView.findViewById(R.id.caseData);
+
+            itemView.setOnClickListener(click->{
+                AlertDialog.Builder builder = new AlertDialog.Builder( Covid19FrontPage.this);
+                builder.setMessage("Do you want to save data for the date: " + dateData.getText())
+                        .setTitle("Question: ")
+                        .setNegativeButton("No", ((dialog, cl) -> {
+                        }))
+                        .setPositiveButton("Yes",((dialog, cl) -> {
+                            Snackbar.make(dateData,"Data saved", Snackbar.LENGTH_LONG)
+                                    .setAction("Undo saving", clk->{}).show();
+
+                        })).create().show();
+
+
+            });
         }
         public void setPosition(int p) {
             position = p;
