@@ -2,5 +2,7 @@
     <string name="app_name">Covid19 Information Tracker</string>
     <string name="srchBtn">Search</string>
     <string name="snackBar">snackBar</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 
 </resources>

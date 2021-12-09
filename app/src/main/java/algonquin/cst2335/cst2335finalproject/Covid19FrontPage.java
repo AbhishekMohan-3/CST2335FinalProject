@@ -2,9 +2,12 @@ package algonquin.cst2335.cst2335finalproject;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
@@ -59,7 +63,7 @@ import java.util.stream.Collectors;
  */
 
 public class Covid19FrontPage extends AppCompatActivity {
-
+/**Variables that can be accessed anywhere*/
     SharedPreferences sharedpreferences;
     String searchItem ;
     RecyclerView covidRecycleView;
@@ -90,6 +94,19 @@ public class Covid19FrontPage extends AppCompatActivity {
         setContentView(R.layout.activity_covid19_front_page);
         Toolbar myToolbar = findViewById(R.id.toolBar);
         setSupportActionBar(myToolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, myToolbar, R.string.open, R.string.close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = findViewById(R.id.popout_menu);
+        navigationView.setNavigationItemSelectedListener((item)->{
+            onOptionsItemSelected(item);
+            drawer.closeDrawer(GravityCompat.START);
+
+            return false;
+
+        });
+
         /**
          *shared preferences to store the last search of the user
          */
