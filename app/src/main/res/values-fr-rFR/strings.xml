@@ -2,5 +2,14 @@
 <resources>
     <string name="app_name">Traqueur d\'informations sur le Covid19</string>
     <string name="srchBtn">chercher</string>
-    <string name="snackBar">snack-bar</string>
+    <string name="snackBar">enregistré</string>
+    <string name="open">Ouvert</string>
+    <string name="close">Fermer</string>
+    <string name="helpMenu">Menu d\'aide</string>
+    <string name="goToCovid">Traqueur Covid</string>
+    <string name="gotToCarbon">Interface Carbone</string>
+    <string name="goToOwlbot">HibouBot</string>
+    <string name="title">Titre de l\'activité : Traqueur d\'informations sur le Covid 19</string>
+    <string name="author">Auteur : Abhishek Mohan</string>
+    <string name="version">Version : 1.0</string>
 </resources>

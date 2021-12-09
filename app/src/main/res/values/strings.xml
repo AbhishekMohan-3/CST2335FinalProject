@@ -1,8 +1,18 @@
 <resources>
     <string name="app_name">Covid19 Information Tracker</string>
     <string name="srchBtn">Search</string>
-    <string name="snackBar">snackBar</string>
+    <string name="snackBar">saved</string>
     <string name="open">open</string>
     <string name="close">close</string>
+    <string name="helpMenu">Help Menu</string>
+    <string name="goToCovid">Covid Tracker</string>
+    <string name="gotToCarbon">Carbon Interface</string>
+    <string name="goToOwlbot">OwlBot</string>
+    <string name="title">ActivityTitle: Covid 19 Information Tracker</string>
+    <string name="author">Author: Abhishek Mohan</string>
+    <string name="version">Version: 1.0</string>
+
+
+
 
 </resources>

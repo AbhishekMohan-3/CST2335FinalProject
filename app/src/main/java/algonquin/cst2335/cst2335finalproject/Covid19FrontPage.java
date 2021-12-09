@@ -445,6 +445,15 @@ public class Covid19FrontPage extends AppCompatActivity {
             case R.id.gotTo_Carbon:
                /* Intent carbonPage = new Intent( Covid19FrontPage.this, MainActivity.class);
                 startActivity(carbonPage);*/
+                Context context = getApplicationContext();
+                /**Toast message to show "please wait" message */
+                Toast.makeText(context, "Not yet Implemented", Toast.LENGTH_SHORT).show();
+
+                break;
+
+            case R.id.goTo_Covid:
+                Intent covidPage = new Intent( Covid19FrontPage.this, Covid19FrontPage.class);
+                startActivity(covidPage);
                 break;
             case R.id.helpMenu:
                 AlertDialog dialog = new AlertDialog.Builder(this)

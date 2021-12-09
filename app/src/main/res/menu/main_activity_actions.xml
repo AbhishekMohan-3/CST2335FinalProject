@@ -2,20 +2,26 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <item
         android:id="@+id/helpMenu"
         android:icon="@drawable/authorinfo"
-        android:title="Help Menu"
+        android:title="@string/helpMenu"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/goTo_Covid"
+        android:icon="@drawable/covid"
+        android:title="@string/goToCovid"
         app:showAsAction="always" />
     <item
         android:id="@+id/gotTo_Carbon"
         android:icon="@drawable/carbon"
-        android:title="Carbon Tracker"
+        android:title="@string/gotToCarbon"
         app:showAsAction="always" />
     <item
         android:id="@+id/goTo_OwlBot"
         android:icon="@drawable/owlbot"
-        android:title="OwlBot"
+        android:title="@string/goToOwlbot"
         android:visible="true"
         app:showAsAction="always" />
 </menu>
